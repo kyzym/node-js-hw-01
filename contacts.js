@@ -16,8 +16,9 @@ export const listContacts = async () => {
 export const getContactById = async (contactId) => {
   try {
     const res = await listContacts();
+    const [result] = res.filter((contact) => contact.id === contactId);
 
-    return res.filter((contact) => contact.id === contactId);
+    return result;
   } catch (err) {
     console.log(err);
   }
@@ -53,8 +54,10 @@ export const removeContact = async (contactId) => {
   if (idx === -1) {
     return null;
   }
-  [removed] = contacts.splice(idx, 1);
+
+  const [removed] = contacts.splice(idx, 1);
 
   await writeFile(contactsPath, JSON.stringify(contacts));
+
   return removed;
 };

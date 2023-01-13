@@ -28,7 +28,7 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
 
     case "get":
       const getContact = await getContactById(id);
-      if (!getContact.length) {
+      if (!getContact) {
         return console.log(
           chalk.bgRed(`the contact with id-- ${id} not found`)
         );
