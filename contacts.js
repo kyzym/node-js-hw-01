@@ -1,10 +1,10 @@
-const { readFile, writeFile } = require("fs/promises");
-require("colors");
-const { v4: uuidv4 } = require("uuid");
+import { readFile, writeFile } from "node:fs/promises";
+import chalk from "chalk";
+import { v4 as uuidv4 } from "uuid";
 
 const contactsPath = "./db/contacts.json";
 
-const listContacts = async () => {
+export const listContacts = async () => {
   try {
     const data = await readFile(contactsPath, "utf-8");
     return JSON.parse(data);
@@ -13,7 +13,7 @@ const listContacts = async () => {
   }
 };
 
-const getContactById = async (contactId) => {
+export const getContactById = async (contactId) => {
   try {
     const res = await listContacts();
 
@@ -23,7 +23,7 @@ const getContactById = async (contactId) => {
   }
 };
 
-const addContact = async (name, email, phone) => {
+export const addContact = async (name, email, phone) => {
   try {
     const contacts = await listContacts();
     const newContact = { id: uuidv4(), name, email, phone };
@@ -33,8 +33,9 @@ const addContact = async (name, email, phone) => {
       )
     ) {
       return console.log(
-        `The contact name: ${name} with email: ${email} already exist, add someone new please`
-          .bgBlue
+        chalk.bgBlue(
+          `The contact name: ${name} with email: ${email} already exist, add someone new please`
+        )
       );
     }
 
@@ -46,7 +47,7 @@ const addContact = async (name, email, phone) => {
   }
 };
 
-const removeContact = async (contactId) => {
+export const removeContact = async (contactId) => {
   const contacts = await listContacts();
   const idx = contacts.findIndex((contact) => contact.id === contactId);
   if (idx === -1) {
@@ -56,11 +57,4 @@ const removeContact = async (contactId) => {
 
   await writeFile(contactsPath, JSON.stringify(contacts));
   return removed;
-};
-
-module.exports = {
-  listContacts,
-  getContactById,
-  addContact,
-  removeContact,
 };

@@ -1,5 +1,5 @@
-const { program } = require("commander");
-require("colors");
+import { program } from "commander";
+import chalk from "chalk";
 
 program
   .option("-a, --action <type>", "choose action")
@@ -12,12 +12,12 @@ program.parse(process.argv);
 
 const argv = program.opts();
 
-const {
+import {
   listContacts,
   getContactById,
   removeContact,
   addContact,
-} = require("./contacts");
+} from "./contacts.js";
 
 const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
@@ -29,16 +29,17 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
     case "get":
       const getContact = await getContactById(id);
       if (!getContact.length) {
-        return console.log(`the contact with id-- ${id} not found`.bgRed);
+        return console.log(
+          chalk.bgRed(`the contact with id-- ${id} not found`)
+        );
       }
       console.log(getContact);
-
       break;
 
     case "add":
       const newContact = await addContact(name, email, phone);
       if (!newContact) {
-        return console.log(`we cant add ${name}`.bgRed);
+        return console.log(chalk.bgRed(`we cant add ${name}`));
       }
       console.log(newContact);
 
@@ -46,7 +47,7 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
 
     case "remove":
       const removedContact = await removeContact(id);
-      console.log("removedContact = ", removedContact);
+      console.log(removedContact);
       break;
 
     default:
